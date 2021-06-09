@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
-const { mysqlDatabase, jwtSecretKey } = require('../../config');
+const { mysqlDatabase, jwtSecretKey } = require('./config');
 
 const userSchema = Joi.object({
   email: Joi.string().email().max(250).trim().lowercase(),
