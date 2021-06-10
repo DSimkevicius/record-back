@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
-const { mysqlDatabase, jwtSecretKey } = require('./config');
+const { mysqlDatabase, jwtSecretKey } = require('../../config');
 
 const userSchema = Joi.object({
   email: Joi.string().email().max(250).trim().lowercase(),
@@ -38,8 +38,8 @@ router.post('/register', async (req, res) => {
 
     const [data] = await con.execute(
       `INSERT INTO users (email, password) VALUES (${mysql.escape(
-        userData.email
-      )}, '${hashedPassword}')`
+        userData.email,
+      )}, '${hashedPassword}')`,
     );
 
     if (data.affectedRows !== 1) {
@@ -76,7 +76,7 @@ router.post('/login', async (req, res) => {
     const con = await mysql.createConnection(mysqlDatabase);
 
     const [data] = await con.execute(
-      `SELECT * FROM users WHERE email = ${mysql.escape(req.body.email)}`
+      `SELECT * FROM users WHERE email = ${mysql.escape(req.body.email)}`,
     );
 
     if (data.length !== 1) {
@@ -91,7 +91,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign(
       { id: data[0].id, email: data[0].email },
-      jwtSecretKey
+      jwtSecretKey,
     );
 
     return res.send({ msg: 'Successfully logged in', token });
